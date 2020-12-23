@@ -1,0 +1,17 @@
+{% extends "orders/base.html" %}
+
+
+{% block title %}
+Pinnochio's Pizza
+{% endblock %}
+
+{% block body %}
+
+<h2>Regular Pizzas</h2>
+<ul>
+  {% for pizza in regular_pizzas %}
+      <li><a href="" class="regular_pizza" data-pk={{pizza.id}}>{{ pizza }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

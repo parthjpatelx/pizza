@@ -2,19 +2,55 @@
 
 Web Programming with Python and JavaScript
 
-TODO:
--add data-set to index.html with pk of each food (use class to label food) x
--string representation of pizza x
--create pizza objects in admin x
--confirm we can access id attribute x (yes)
--ensure # of toppings is greater than 0
 
-- view function- pass in menu objects to index.HTML
 
-- implement HTML for login, passing in message
-- implement HTML for error page, passing in message
-- assign the ul class to the parent
+#SERVER TODO
+- figure out how to compact string->object definitions
+- ensure that food_category and food_pk are valid
+- figure out how to represent quantity
+- create a submit order function
+- make sure user has to be logged in to access each view
+- delete the empty cart assignment in add_to_cart so that user can add multiple items to cart
+- edit models.py so that all foods have a corresponding string representation
+- set up register view
+    note when we register a new user, make sure to set active cart to False
 
+
+Add string expression to each food class
+When querying for food class, speciify the get_object_from_string
+Food.objects.filter(food_string = food_category)
+
+
+#HTML TODO
+- each link in list should link to /<food_type>/<pk> which should be linked ot add_to_cart
+- create login.html
+- create a carts html page
+-change add_to_cart view so that cart shows up on index page
+
+
+#JAVASCRIPT TODO
+
+
+
+if food_category == "regularpizza":
+    new_food = Regular_Pizza.objects.get(pk = food_pk)
+
+
+    # request.session['cart'] = current_cart
+
+
+
+
+
+
+
+
+
+
+
+
+
+Design:
 
 when the user clicks on the link, pass in the pk of the food as well as object Type
 at the server side, use a query to get the corresponding object given pk

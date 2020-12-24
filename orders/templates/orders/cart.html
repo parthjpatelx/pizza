@@ -1,0 +1,14 @@
+{% block title %}
+Cart
+{% endblock %}
+
+
+{% block body %}
+<ul>
+  {% for object in cart %}
+      <li> {{ object }} </li>
+  {% endfor %}
+
+</ul>
+
+{% endblock %}

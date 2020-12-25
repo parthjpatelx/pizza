@@ -4,12 +4,26 @@ from orders.models import *
 import json
 # Create your views here.
 
-def get_all_objects_from_string(food_category):
-    if food_category == "regularpizza":
-        return Regular_Pizza.objects.all()
-    if food_category == "sicilianpizza":
-        return Sicilian_pizza.objects.all()
+food_strings = ["regularpizza", "sicilianpizza", "salad","dinnerplatter", "pasta"]
 
+REGULAR_PIZZA_IDX = 0
+SICILIAN_PIZZA_IDX = 1
+SALAD_IDX = 2
+PLATTER_IDX = 3
+PASTA_IDX = 4
+
+
+def get_all_objects_from_string(food_category):
+    if food_category ==  food_strings[REGULAR_PIZZA_IDX]:
+        return Regular_Pizza.objects.all()
+    elif food_category == food_strings[SICILIAN_PIZZA_IDX]:
+        return Sicilian_pizza.objects.all()
+    elif food_category == food_strings[SALAD_IDX]:
+        return Salad.objects.all()
+    elif food_category == food_strings[PLATTER_IDX]:
+        return Dinner_platter.objects.all()
+    elif food_category == food_strings[PASTA_IDX]:
+        return Pasta.objects.all()
 
 def get_object_from_string(food_category, food_pk):
     if food_category == 'regularpizza':
@@ -42,6 +56,15 @@ def login(request):
 
 
 def add_to_cart(request, food_category, food_pk):
+
+    if food_category not in food_strings:
+        return render(request, "orders/error.html", {"message": "Invalid food."})
+
+    try:
+         Food.objects.get(pk = food_pk)
+    except KeyError:
+        return render(request, "orders/error.html", {"message": "Key error"})
+
 
     request.session['cart'] = {}
     current_cart = request.session['cart']

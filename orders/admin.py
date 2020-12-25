@@ -8,7 +8,7 @@ admin.site.register(Sub_type)
 admin.site.register(Topping)
 admin.site.register(Size)
 
-admin.site.register(Food)
+
 admin.site.register(Sicilian_pizza)
 admin.site.register(Regular_Pizza)
 admin.site.register(Salad_type)

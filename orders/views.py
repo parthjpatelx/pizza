@@ -35,6 +35,22 @@ def get_object_from_string(food_category, food_pk):
     return food_object
 
 
+def convert_key_to_objects(current_cart):
+    cart_food_objects = []
+
+    for food_category in current_cart:
+        for id in current_cart[food_category]:
+            quantity = current_cart[food_category][id]
+
+            if quantity > 0:
+                food_object = get_object_from_string(food_category, id)
+                cart_food_objects.append(food_object)
+
+    return cart_food_objects
+
+
+
+
 def index(request):
     context = {
         "regular_pizzas" : Regular_Pizza.objects.all()
@@ -82,31 +98,18 @@ def add_to_cart(request, food_category, food_pk):
     #update quantity and cart
     current_cart[food_category][food_pk] += 1
     request.session['cart'] = current_cart
-
-    #convert food string/id stored in session dict into objects
-    cart_food_objects = []
-
-    list_of_categories = list(current_cart)
-    number_of_categories = len(list_of_categories)
-
-    for category_idx in range(number_of_categories):
-        food_category = list_of_categories[category_idx]
-
-        list_of_food_ids = list(current_cart[food_category])
-        number_of_food_ids = len(list_of_food_ids)
-
-        for id_idx in range(number_of_food_ids):
-            id = list_of_food_ids[id_idx]
-
-            quantity = current_cart[food_category][id]
-            if quantity > 0:
-                food_object = get_object_from_string(food_category, id)
-                cart_food_objects.append(food_object)
-
-
+    cart_food_objects = convert_key_to_objects(current_cart)
 
     context = {
         "cart" : cart_food_objects
     }
 
     return render(request, "orders/cart.html",context)
+
+
+# def submit_order(request):
+#     check if user has any items in his cart
+#     current_cart = request.session['cart']
+#     #convert all the keys into objects
+#     #add the objects to the cart
+#     #as you add each object, calculate Price

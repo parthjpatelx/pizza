@@ -5,20 +5,30 @@ Web Programming with Python and JavaScript
 
 
 #SERVER TODO
-- figure out how to compact string->object definitions
-- ensure that food_category and food_pk are valid
-- figure out how to represent quantity
-- create a submit order function
-- make sure user has to be logged in to access each view
-- delete the empty cart assignment in add_to_cart so that user can add multiple items to cart
-- edit models.py so that all foods have a corresponding string representation
-- set up register view
+
+
+#figure out how to represent quantity
+      if we represent the individual foods as general food objects, will this slice off their individual properties? See what happens. How do we avoid this? Read python the hard way OOP section
+
+# create a submit order function
+
+# make sure user has to be logged in to access each view
+
+# delete the empty cart assignment in add_to_cart so that user can add multiple items to cart
+
+#edit models.py so that all foods have a corresponding string representation
+
+#set up register view
     note when we register a new user, make sure to set active cart to False
 
+#Compacting two definitions at top
+     Figure out how to use meta properties of objects to refer to them. If we return a food query, will it slice off properties?->Probably yes. How can we avoid this?
+    foods_for_my_category = Food.objects.filter(string_name = food_category)
 
-Add string expression to each food class
-When querying for food class, speciify the get_object_from_string
-Food.objects.filter(food_string = food_category)
+
+
+
+
 
 
 #HTML TODO

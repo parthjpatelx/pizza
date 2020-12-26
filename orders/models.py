@@ -81,7 +81,12 @@ class Pasta(Food):
 
 
 #CART
+class Cart_item(models.Model):
+    item = models.ForeignKey(Food, blank=True, on_delete = models.CASCADE)
+    quantity = models.IntegerField()
+
+
 class Cart(models.Model):
-    items_in_cart = models.ManyToManyField(Food, blank=True)
+    items_in_cart = models.ManyToManyField(Cart_item, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     time = models.TimeField(auto_now=False, auto_now_add=False)

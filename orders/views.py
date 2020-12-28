@@ -2,6 +2,10 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from orders.models import *
 import json
+from django.templatetags.static import static
+from django.views.decorators.csrf import csrf_exempt # new
+from django.http.response import JsonResponse # new
+
 # Create your views here.
 
 food_strings = ["regularpizza", "sicilianpizza", "salad","dinnerplatter", "pasta"]
@@ -47,8 +51,6 @@ def convert_key_to_objects(current_cart):
                 cart_food_objects.append(food_object)
 
     return cart_food_objects
-
-
 
 
 def index(request):
@@ -106,10 +108,46 @@ def add_to_cart(request, food_category, food_pk):
 
     return render(request, "orders/cart.html",context)
 
+def view_checkout(request):
+    return render(request, "orders/checkout.html")
 
-# def submit_order(request):
-#     check if user has any items in his cart
-#     current_cart = request.session['cart']
-#     #convert all the keys into objects
-#     #add the objects to the cart
-#     #as you add each object, calculate Price
+
+
+@csrf_exempt
+def create_checkout_session(request):
+    current_cart = request.session['cart']
+
+    if not current_cart:
+        return render(request, "orders/error.html", {"message": "No items in cart"})
+
+    cart_food_objects = convert_key_to_objects(current_cart)
+
+    #TODO:create and save a new cart with the items in the cart_food_objects array
+    #this should be done AFTER payment is processed. see success_url
+
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=
+            [
+                {
+                    'price_data':
+                    {
+                        'currency': 'usd',
+                        'unit_amount': 2000,
+                        'product_data':
+                        {
+                            'name': 'Stubborn Attachments',
+                            'images': ['https://i.imgur.com/EHyR2nP.png'],
+                        },
+                    },
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url= static("orders/success.html"),
+            cancel_url= static("orders/cancel.html")
+        )
+        return JsonResponse({'sessionId': checkout_session['id']}) 
+    except Exception as e:
+        return JsonResponse({'error': str(e)})

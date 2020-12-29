@@ -5,6 +5,7 @@ import json
 from django.templatetags.static import static
 from django.views.decorators.csrf import csrf_exempt # new
 from django.http.response import JsonResponse # new
+import stripe
 
 # Create your views here.
 
@@ -113,41 +114,51 @@ def view_checkout(request):
 
 
 
+#taken from https://testdriven.io/blog/django-stripe-tutorial/
+@csrf_exempt
+def stripe_config(request):
+    if request.method == 'GET':
+        stripe_config = {'publicKey': settings.STRIPE_PUBLIC_KEY}
+        return JsonResponse(stripe_config, safe=False)
+
+
+#taken from https://testdriven.io/blog/django-stripe-tutorial/
 @csrf_exempt
 def create_checkout_session(request):
-    current_cart = request.session['cart']
+    if request.method == 'GET':
+        domain_url = 'http://localhost:8000/'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
 
-    if not current_cart:
-        return render(request, "orders/error.html", {"message": "No items in cart"})
+            #take information in session key and represent it as a dict
+            items = []
+            request.session['cart'] = current_cart
+            cart_food_objects = convert_key_to_objects(current_cart)
 
-    cart_food_objects = convert_key_to_objects(current_cart)
-
-    #TODO:create and save a new cart with the items in the cart_food_objects array
-    #this should be done AFTER payment is processed. see success_url
-
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=
-            [
-                {
-                    'price_data':
-                    {
-                        'currency': 'usd',
-                        'unit_amount': 2000,
-                        'product_data':
-                        {
-                            'name': 'Stubborn Attachments',
-                            'images': ['https://i.imgur.com/EHyR2nP.png'],
-                        },
-                    },
+            for object in cart_food_objects:
+                temp_dict = {
+                    'name': object,
                     'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url= static("orders/success.html"),
-            cancel_url= static("orders/cancel.html")
-        )
-        return JsonResponse({'sessionId': checkout_session['id']}) 
-    except Exception as e:
-        return JsonResponse({'error': str(e)})
+                    'currency': 'usd',
+                    'amount': object.price,
+                }
+
+                items.append(temp_dict)
+
+
+            checkout_session = stripe.checkout.Session.create(
+                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancelled/',
+                payment_method_types=['card'],
+                mode='payment',
+                line_items= items
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+def success(request):
+    return render(request, "orders/success.html")
+
+def cancelled(request):
+    return render(request, "orders/cancelled.html")

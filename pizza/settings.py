@@ -125,7 +125,7 @@ STRIPE_PUBLIC_KEY = "pk_test_51I3ADCAej382NkKKbnrljWHsL4xv4y86f51f6I59MH5AimPW12
 STRIPE_SECRET_KEY = "sk_test_51I3ADCAej382NkKKTE8BeC8VMyQalDpfWjqBoqteUfw7dYTVYzzYuxpCj9x3bQhRxi12Ev74rdJkW0nGpMxDmICR00vrZKjHcm"
 
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # for django >= 3.1
-STATICFILES_DIRS = [Path(BASE_DIR).joinpath('static')]  # new
+# STATICFILES_DIRS = [path(BASE_DIR).joinpath('static')]  # new

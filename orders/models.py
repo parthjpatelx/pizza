@@ -48,37 +48,33 @@ class Pizza(Food):
     class Meta:
         abstract = True
 
-    def __str__(self):
-        return f"toppings: {self.number_toppings}, Price: {self.price}"
-
 class Sicilian_pizza(Pizza):
-    class Meta:
-        verbose_name = "sicilianpizza"
-
+    def __str__(self):
+        return f"{self.size} Sicilian Pizza - toppings: {self.number_toppings}"
 
 class Regular_Pizza(Pizza):
-    class Meta:
-        verbose_name = "regularpizza"
+    def __str__(self):
+        return f"{self.size} Regular Pizza - toppings: {self.number_toppings}"
 
 
 class Salad(Food):
     salad_type = models.ForeignKey(Salad_type, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name = "salad"
+    def __str__(self):
+        return f"{self.size} {self.salad_type}"
 
 class Dinner_platter(Food):
     platter_type = models.ForeignKey(Platter_type, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name = "dinnerplatter"
+    def __str__(self):
+        return f"{self.size} {self.salad_type}"
+
 
 class Pasta(Food):
     pasta_type = models.ForeignKey(Pasta_type, on_delete=models.CASCADE)
 
-    class Meta:
-        verbose_name = "pasta"
-
+    def __str__(self):
+        return f"{self.size} {self.salad_type}"
 
 #CART
 class Cart_item(models.Model):
